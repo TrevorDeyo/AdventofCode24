@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
+#include <unordered_map>
 
 int main()
 {
@@ -44,8 +45,40 @@ int main()
         // Get the size of the vectors (they should be the same)
         int n = list1.size();
 
-        //figure out how many times a number in list 1 appears in list 2
-        // 
+        // figure out how many times a number in list 1 appears in list 2
+        // Calculate a total similarity score by adding up each number in
+        // the left list after multiplying it by the number of times that
+        // number appears in the right list.
+    
+        // create a hashmap to store the occurrence of each numbers
+        std::unordered_map<int, int> numCounts;
+        // for each number in list 1
+        for (int num1 : list1) {
+            // varible to count the occurrences
+            int numCount = 0;
+            // for each number in list 2
+            for (int num2 : list2) {
+                // since the vectors are sorted low to high, we can break out of the loop
+                // if the list2 num is bigger than list1 num to save some computation
+                if (num2 > num1) {
+                    break;
+                }
+                // add each occurrence
+                if (num1 == num2) {
+                    numCount++;
+                }
+            }
+            // add the count to the map
+            numCounts[num1] = numCount;
+        }
+        // var to store the total simularity score
+        int totalSimularityScore = 0;
+        // multiply the numCounts pairs and add them together
+        for (const auto& pair : numCounts) {
+            totalSimularityScore += pair.first * pair.second;
+        }
+        // print score
+        std::cout << totalSimularityScore;
     }
     return 0;
 }
