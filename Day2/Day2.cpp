@@ -50,7 +50,7 @@ int main()
             increasing = false;
         }
         // Check if all follow the pattern
-        for (int i = 1; report.size() - 1 ; i++) {
+        for (int i = 1; i < report.size() - 1 ; i++) {
             if (!(increasing == true && report[i + 1] > report[i])) {
                 reportUnsafe = true;
             }
