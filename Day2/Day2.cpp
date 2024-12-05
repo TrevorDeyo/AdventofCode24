@@ -1,20 +1,41 @@
-// Day2.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <sstream>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::ifstream file("input.txt"); // Open File
+
+    if (!file) { // Check if file opened successfully
+        std::cerr << "Error opening file!" << std::endl;
+        return 1;
+    }
+
+    std::vector<std::vector<int>> allLines; // vector of vectors to store all lines
+
+    std::string line;
+    while (std::getline(file, line)) { // Read file line by line
+        std::istringstream ss(line); // Use stringstream to parse the line
+        std::vector<int> report;
+        int num;
+
+        while (ss >> num) { // Extract integers from the string
+            report.push_back(num); // Store each integer in the vector
+        }
+
+        allLines.push_back(report); // Store report Vector into the allLines vector
+    }
+    file.close(); // close the file
+
+    int unsafeCount = 0; // store unsafe count
+    for (std::vector<int> report : allLines) {
+        bool increasing;
+        for (int i = 0; i < report.size() - 1; i++) {
+            if (report[i] < report[i + 1] + 1 && report[i] < report[i + 1] + 4 || report[i] < report[i + 1] - 1 && report[i] > report[i + 1] - 4) {
+                
+            }
+        }
+    }
+    return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
