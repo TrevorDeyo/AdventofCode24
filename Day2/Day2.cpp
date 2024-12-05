@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <chrono>
 
 int main()
 {
@@ -28,14 +29,32 @@ int main()
     }
     file.close(); // close the file
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     int unsafeCount = 0; // store unsafe count
     for (std::vector<int> report : allLines) {
-        bool increasing;
+        // check if each increment are within limits + or - | 1 to 3
         for (int i = 0; i < report.size() - 1; i++) {
-            if (report[i] < report[i + 1] + 1 && report[i] < report[i + 1] + 4 || report[i] < report[i + 1] - 1 && report[i] > report[i + 1] - 4) {
-                
+            if (!(report[i] < report[i + 1] + 1 && report[i] < report[i + 1] + 4 || report[i] < report[i + 1] - 1 && report[i] > report[i + 1] - 4)) {
+                unsafeCount++;
             }
         }
+        // Check if its all increasing or decreasing
+        bool increasing;
+        for (int i = 0; i < report.size() - 1; i++) {
+
+        }
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    // Calculate the duration in milliseconds, microseconds, or nanoseconds
+    std::chrono::duration<double> duration = end - start;
+
+    // Print the time taken in seconds (duration.count() gives the value in seconds)
+    std::cout << "Time taken: " << duration.count() << " seconds\n";
+
+    // Speed test doing <= >= and test storing .size() in a variable
+
     return 0;
 }
