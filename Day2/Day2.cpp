@@ -33,16 +33,33 @@ int main()
 
     int unsafeCount = 0; // store unsafe count
     for (std::vector<int> report : allLines) {
+        // for tracking unsafe status
+        bool reportUnsafe = false;
         // check if each increment are within limits + or - | 1 to 3
         for (int i = 0; i < report.size() - 1; i++) {
             if (!(report[i] < report[i + 1] + 1 && report[i] < report[i + 1] + 4 || report[i] < report[i + 1] - 1 && report[i] > report[i + 1] - 4)) {
-                unsafeCount++;
+                reportUnsafe = true;
             }
         }
         // Check if its all increasing or decreasing
         bool increasing;
-        for (int i = 0; i < report.size() - 1; i++) {
-
+        if (report[0] < report[1]) {
+            increasing = true;
+        }
+        else {
+            increasing = false;
+        }
+        // Check if all follow the pattern
+        for (int i = 1; report.size() - 1 ; i++) {
+            if (!(increasing == true && report[i + 1] > report[i])) {
+                reportUnsafe = true;
+            }
+            if (!(increasing == false && report[i + 1] < report[i])) {
+                reportUnsafe = true;
+            }
+        }
+        if (reportUnsafe == true) {
+            unsafeCount++;
         }
     }
 
@@ -55,6 +72,8 @@ int main()
     std::cout << "Time taken: " << duration.count() << " seconds\n";
 
     // Speed test doing <= >= and test storing .size() in a variable
+
+    std::cout << "There are " << unsafeCount << " unsafe reports.\n";
 
     return 0;
 }
