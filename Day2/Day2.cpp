@@ -37,7 +37,7 @@ int main()
         bool reportUnsafe = false;
         // check if each increment are within limits + or - | 1 to 3
         for (int i = 0; i < report.size() - 1; i++) {
-            if (!(report[i] < report[i + 1] + 1 && report[i] < report[i + 1] + 4 || report[i] < report[i + 1] - 1 && report[i] > report[i + 1] - 4)) {
+            if (report[i] - report[i + 1] > 3 || report[i] - report[i + 1] < 1) {
                 reportUnsafe = true;
             }
         }
