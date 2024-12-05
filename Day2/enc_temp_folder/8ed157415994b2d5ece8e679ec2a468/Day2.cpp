@@ -35,15 +35,19 @@ int main()
     for (std::vector<int> report : allLines) {
         // for tracking unsafe status
         bool reportUnsafe = false;
-        // Check if its increasing or decreasing
+        // check if each increment are within limits + or - | 1 to 3
+        for (int i = 0; i < report.size() - 1; i++) {
+            if (abs(report[i] - report[i + 1]) > 3 || abs(report[i] - report[i + 1]) < 1) {
+                reportUnsafe = true;
+            }
+        }
+        // Check if its all increasing or decreasing
         bool increasing;
         if (report[0] < report[1]) {
-            // check if each increment are within limits +1 to +3
-            for (int num :)
+            increasing = true;
         }
         else {
-
-            // check if each increment are within limits -1 to -3;
+            increasing = false;
         }
         // Check if all follow the pattern
         for (int i = 1; i < report.size() - 1 ; i++) {
