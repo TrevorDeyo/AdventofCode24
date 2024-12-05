@@ -44,28 +44,8 @@ int main()
         // Get the size of the vectors (they should be the same)
         int n = list1.size();
 
-        /*
-        // Debugging: Print the sorted vectors (Optional)
-        std::cout << "Sorted Lists:\n";
-        for (int i = 0; i < 10; i++) {
-            std::cout << list1[i] << " " << list2[i] << "\n";
-        }
-        */
-
-        // Calculate the total distance between corresponding elements
-        int totalDistance = 0;
-        for (int i = 0; i < n; i++) {
-            totalDistance += abs(list1[i] - list2[i]); // Use abs to calculate absolute difference
-        }
-
-        // Print the total distance
-        std::cout << "Total Distance: " << totalDistance << "\n";
+        //figure out how many times a number in list 1 appears in list 2
+        // 
     }
-    else
-    {
-        // Error message if the file couldn't be opened
-        std::cerr << "Error: Could not open the file.\n";
-    }
-
-    return 0; // End of the program
+    return 0;
 }
