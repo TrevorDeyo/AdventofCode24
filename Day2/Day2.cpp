@@ -48,8 +48,31 @@ void runTestCases()
         {{1, 3, 2}, true, "Unsafe mixed trend (trend reversal)"},
         {{3, 3}, true, "Unsafe equal values"},
         {{1}, true, "Unsafe single element (not enough data)"},
-        {{}, true, "Unsafe empty sequence"},
+        {{}, true, "Unsafe empty sequence"}
+    };
 
+    std::cout << std::fixed << std::setprecision(6);
+    std::cout << "Running test cases...\n";
+
+    // Execute test cases
+    for (size_t i = 0; i < testCases.size(); ++i) {
+        const auto& testCase = testCases[i];
+        bool result = isReportUnsafe(testCase.report);
+        std::cout << "Test " << i + 1 << ": " << testCase.description << "\n";
+        std::cout << " Report: ";
+        for (int num : testCase.report) {
+        std::cout << num << " ";
+    }
+        std::cout << "\n Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
+            << ", Got: " << (result ? "Unsafe" : "Safe") << "\n";
+
+        if (result == testCase.expectedUnsafe) {
+            std::cout << "  Result: PASS\n";
+        }
+        else {
+            std::cout << "  Result: FAIL\n";
+        }
+        std::cout << "--------------------------------\n";
     }
 }
 
