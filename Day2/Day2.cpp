@@ -5,33 +5,7 @@
 #include <chrono>
 #include <iomanip> // For formatting output
 
-bool isReportUnsafe(const std::vector<int>& report) 
-{
-    if (report.size() < 2) {
-        return true; // Not enough data to determine a trend
-    }
-
-    bool shouldIncrease = report[0] < report[1]; // Determine the initial trend
-
-    for (size_t i = 0; i < report.size() - 1; ++i) {
-        int difference = report[i + 1] - report[i];
-
-        // Check if the trend or difference is violated
-        if ((shouldIncrease && (difference < 1 || difference > 3)) ||  // Increasing but not within range
-            (!shouldIncrease && (difference > -1 || difference < -3))) { // Decreasing but not within range
-            return true; // Unsafe report
-        }
-
-        // Ensure the direction remains consistent
-        if ((shouldIncrease && difference <= 0) || (!shouldIncrease && difference >= 0)) {
-            return true; // Trend violation
-        }
-    }
-
-    return false; // Safe report
-}
-
-void runTestCases() 
+void runTestCases()
 {
     struct TestCase {
         std::vector<int> report;
@@ -61,8 +35,8 @@ void runTestCases()
         std::cout << "Test " << i + 1 << ": " << testCase.description << "\n";
         std::cout << " Report: ";
         for (int num : testCase.report) {
-        std::cout << num << " ";
-    }
+            std::cout << num << " ";
+        }
         std::cout << "\n Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
             << ", Got: " << (result ? "Unsafe" : "Safe") << "\n";
 
@@ -76,8 +50,37 @@ void runTestCases()
     }
 }
 
+bool isReportUnsafe(const std::vector<int>& report) 
+{
+    if (report.size() < 2) {
+        return true; // Not enough data to determine a trend
+    }
+
+    bool shouldIncrease = report[0] < report[1]; // Determine the initial trend
+
+    for (size_t i = 0; i < report.size() - 1; ++i) {
+        int difference = report[i + 1] - report[i];
+
+        // Check if the trend or difference is violated
+        if ((shouldIncrease && (difference < 1 || difference > 3)) ||  // Increasing but not within range
+            (!shouldIncrease && (difference > -1 || difference < -3))) { // Decreasing but not within range
+            return true; // Unsafe report
+        }
+
+        // Ensure the direction remains consistent
+        if ((shouldIncrease && difference <= 0) || (!shouldIncrease && difference >= 0)) {
+            return true; // Trend violation
+        }
+    }
+
+    return false; // Safe report
+}
+
 int main()
 {
+    // Test Cases
+    runTestCases();
+
     std::ifstream file("input.txt"); // Open File
     if (!file) { // Check if file opened successfully
         std::cerr << "Error opening file!" << std::endl;
@@ -110,18 +113,6 @@ int main()
             ++unsafeCount;
         }
     }
-
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = end - start;
-
-
-    // Output results with different time units
-    std::cout << std::fixed << std::setprecision(6); // Formatting for clarity
-    std::cout << "Time taken:\n";
-    std::cout << "  Seconds: " << std::chrono::duration<double>(duration).count() << " s\n";
-    std::cout << "  Milliseconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() << " ms\n";
-    std::cout << "  Microseconds: " << std::chrono::duration_cast<std::chrono::microseconds>(duration).count() << " µs\n";
-    std::cout << "  Nanoseconds: " << std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() << " ns\n";
 
     std::cout << "There are " << unsafeCount << " unsafe reports.\n";
 
