@@ -3,10 +3,10 @@
 #include <vector>
 #include <sstream>
 
-bool isReportUnsafe(const std::vector<int>& report) 
+bool isReportSafe(const std::vector<int>& report) 
 {
     if (report.size() < 2) {
-        return true; // Not enough data to determine a trend
+        return false; // Not enough data to determine a trend
     }
 
     bool shouldIncrease = report[0] < report[1]; // Determine the initial trend
@@ -17,16 +17,16 @@ bool isReportUnsafe(const std::vector<int>& report)
         // Check if the trend or difference is violated
         if ((shouldIncrease && (difference < 1 || difference > 3)) ||  // Increasing but not within range
             (!shouldIncrease && (difference > -1 || difference < -3))) { // Decreasing but not within range
-            return true; // Unsafe report
+            return false; // Unsafe report
         }
 
         // Ensure the direction remains consistent
         if ((shouldIncrease && difference <= 0) || (!shouldIncrease && difference >= 0)) {
-            return true; // Trend violation
+            return false; // Trend violation
         }
     }
 
-    return false; // Safe report
+    return true; // Safe report
 }
 
 void runTestCases()
@@ -54,7 +54,7 @@ void runTestCases()
     // Execute test cases
     for (size_t i = 0; i < testCases.size(); ++i) {
         const auto& testCase = testCases[i];
-        bool result = isReportUnsafe(testCase.report);
+        bool result = isReportSafe(testCase.report);
         std::cout << "Test " << i + 1 << ": " << testCase.description << "\n";
         std::cout << " Report: ";
         for (int num : testCase.report) {
@@ -101,14 +101,14 @@ int main()
     }
     file.close(); // close the file
 
-    int unsafeCount = 0; // store unsafe count
+    int safeCount = 0; // store safe count
     for (const auto& report : allLines) {
-        if (isReportUnsafe(report)) {
-            ++unsafeCount;
+        if (isReportSafe(report)) {
+            ++safeCount;
         }
     }
 
-    std::cout << "There are " << unsafeCount << " unsafe reports.\n";
+    std::cout << "There are " << safeCount << " unsafe reports.\n";
 
     return 0;
 }
