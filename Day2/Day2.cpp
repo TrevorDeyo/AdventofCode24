@@ -38,6 +38,19 @@ void runTestCases()
         bool expectedUnsafe;
         std::string description;
     };
+
+    // Define test cases
+    std::vector<TestCase> testCases = {
+        {{1, 2, 3, 5}, false, "Safe increasing sequence"},
+        {{1, 2, 6}, true, "Unsafe increasing (jump > 3)"},
+        {{5, 3, 2, 1}, false, "Safe decreasing sequence"},
+        {{5, 3, 7}, true, "Unsafe decreasing (trend violation)"},
+        {{1, 3, 2}, true, "Unsafe mixed trend (trend reversal)"},
+        {{3, 3}, true, "Unsafe equal values"},
+        {{1}, true, "Unsafe single element (not enough data)"},
+        {{}, true, "Unsafe empty sequence"},
+
+    }
 }
 
 int main()
