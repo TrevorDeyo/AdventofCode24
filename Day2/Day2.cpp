@@ -2,53 +2,6 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
-#include <chrono>
-#include <iomanip> // For formatting output
-
-void runTestCases()
-{
-    struct TestCase {
-        std::vector<int> report;
-        bool expectedUnsafe;
-        std::string description;
-    };
-
-    // Define test cases
-    std::vector<TestCase> testCases = {
-        {{1, 2, 3, 5}, false, "Safe increasing sequence"},
-        {{1, 2, 6}, true, "Unsafe increasing (jump > 3)"},
-        {{5, 3, 2, 1}, false, "Safe decreasing sequence"},
-        {{5, 3, 7}, true, "Unsafe decreasing (trend violation)"},
-        {{1, 3, 2}, true, "Unsafe mixed trend (trend reversal)"},
-        {{3, 3}, true, "Unsafe equal values"},
-        {{1}, true, "Unsafe single element (not enough data)"},
-        {{}, true, "Unsafe empty sequence"}
-    };
-
-    std::cout << std::fixed << std::setprecision(6);
-    std::cout << "Running test cases...\n";
-
-    // Execute test cases
-    for (size_t i = 0; i < testCases.size(); ++i) {
-        const auto& testCase = testCases[i];
-        bool result = isReportUnsafe(testCase.report);
-        std::cout << "Test " << i + 1 << ": " << testCase.description << "\n";
-        std::cout << " Report: ";
-        for (int num : testCase.report) {
-            std::cout << num << " ";
-        }
-        std::cout << "\n Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
-            << ", Got: " << (result ? "Unsafe" : "Safe") << "\n";
-
-        if (result == testCase.expectedUnsafe) {
-            std::cout << "  Result: PASS\n";
-        }
-        else {
-            std::cout << "  Result: FAIL\n";
-        }
-        std::cout << "--------------------------------\n";
-    }
-}
 
 bool isReportUnsafe(const std::vector<int>& report) 
 {
@@ -74,6 +27,50 @@ bool isReportUnsafe(const std::vector<int>& report)
     }
 
     return false; // Safe report
+}
+
+void runTestCases()
+{
+    struct TestCase {
+        std::vector<int> report;
+        bool expectedUnsafe;
+        std::string description;
+    };
+
+    // Define test cases
+    std::vector<TestCase> testCases = {
+        {{1, 2, 3, 5}, false, "Safe increasing sequence"},
+        {{1, 2, 6}, true, "Unsafe increasing (jump > 3)"},
+        {{5, 3, 2, 1}, false, "Safe decreasing sequence"},
+        {{5, 3, 7}, true, "Unsafe decreasing (trend violation)"},
+        {{1, 3, 2}, true, "Unsafe mixed trend (trend reversal)"},
+        {{3, 3}, true, "Unsafe equal values"},
+        {{1}, true, "Unsafe single element (not enough data)"},
+        {{}, true, "Unsafe empty sequence"}
+    };
+
+    std::cout << "Running test cases...\n";
+
+    // Execute test cases
+    for (size_t i = 0; i < testCases.size(); ++i) {
+        const auto& testCase = testCases[i];
+        bool result = isReportUnsafe(testCase.report);
+        std::cout << "Test " << i + 1 << ": " << testCase.description << "\n";
+        std::cout << " Report: ";
+        for (int num : testCase.report) {
+            std::cout << num << " ";
+        }
+        std::cout << "\n Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
+            << ", Got: " << (result ? "Unsafe" : "Safe") << "\n";
+
+        if (result == testCase.expectedUnsafe) {
+            std::cout << "  Result: PASS\n";
+        }
+        else {
+            std::cout << "  Result: FAIL\n";
+        }
+        std::cout << "--------------------------------\n";
+    }
 }
 
 int main()
@@ -103,9 +100,6 @@ int main()
         allLines.push_back(report); // Store report Vector into the allLines vector
     }
     file.close(); // close the file
-
-    // Start timing the unsafe report calculation because im just curious
-    auto start = std::chrono::high_resolution_clock::now();
 
     int unsafeCount = 0; // store unsafe count
     for (const auto& report : allLines) {
