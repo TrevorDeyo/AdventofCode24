@@ -17,9 +17,9 @@ bool isReportUnsafe(const std::vector<int>& report) {
         int difference = report[i + 1] - report[i];
 
         // Check if the trend is violated or the difference is out of bounds
-        if ((shouldIncrease && difference <= 0) ||
-            (!shouldIncrease && difference >= 0) ||
-            (std::abs(difference) > 3)) {
+        if ((shouldIncrease && difference < 0) ||
+            (!shouldIncrease && difference > 0) ||
+            (std::abs(difference) < 3)) {
             return true; // Unsafe report
         }
     }
