@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <chrono>
+#include <iomanip> // For formatting output
 
 bool isReportUnsafe(const std::vector<int>& report) {
     // Handle the special case where the first two elements are equal
@@ -56,50 +57,22 @@ int main()
 
     int unsafeCount = 0; // store unsafe count
     for (const auto& report : allLines) {
-        // check if each increment are within limits +1 to +3
-            for (int i = 0; i < report.size() - 1; i++) {
-                // make sure were increasing each step
-                if (report[i] >= report[i + 1]) {
-                    reportUnsafe = true;
-                    break;
-                }
-                // make sure the difference is within limits
-                int difference = abs(report[i] - report[i + 1]);
-                if (difference > 3) {
-                    reportUnsafe = true;
-                    break;
-                }
-            }
-        }
-        else { //should be decreasing
-            for (int i = 0; i < report.size() - 1; i++) {
-                // make sure were decreasing each step
-                if (report[i] >= report[i + 1]) {
-                    reportUnsafe = true;
-                    break;
-                }
-                // make sure the difference is within limits
-                int difference = abs(report[i] - report[i + 1]);
-                if (difference > 3) {
-                    reportUnsafe = true;
-                    break;
-                }
-            }
-        }
-        if (reportUnsafe == true) {
-            unsafeCount++;
+        if (isReportUnsafe(report)) {
+            ++unsafeCount;
         }
     }
 
     auto end = std::chrono::high_resolution_clock::now();
+    auto duration = end - start;
 
-    // Calculate the duration in milliseconds, microseconds, or nanoseconds
-    std::chrono::duration<double> duration = end - start;
 
-    // Print the time taken in seconds (duration.count() gives the value in seconds)
-    std::cout << "Time taken: " << duration.count() << " seconds\n";
-
-    // Speed test doing <= >= and test storing .size() in a variable
+    // Output results with different time units
+    std::cout << std::fixed << std::setprecision(6); // Formatting for clarity
+    std::cout << "Time taken:\n";
+    std::cout << "  Seconds: " << std::chrono::duration<double>(duration).count() << " s\n";
+    std::cout << "  Milliseconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() << " ms\n";
+    std::cout << "  Microseconds: " << std::chrono::duration_cast<std::chrono::microseconds>(duration).count() << " µs\n";
+    std::cout << "  Nanoseconds: " << std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() << " ns\n";
 
     std::cout << "There are " << unsafeCount << " unsafe reports.\n";
 
