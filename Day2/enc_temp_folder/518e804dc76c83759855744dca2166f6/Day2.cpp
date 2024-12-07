@@ -5,39 +5,26 @@
 #include <chrono>
 #include <iomanip> // For formatting output
 
-bool isReportUnsafe(const std::vector<int>& report) 
-{
-    if (report.size() < 2) {
-        return true; // Not enough data to determine a trend
+bool isReportUnsafe(const std::vector<int>& report) {
+    // Handle the special case where the first two elements are equal
+    if (report[0] == report[1]) {
+        return true;
     }
 
-    bool shouldIncrease = report[0] < report[1]; // Determine the initial trend
+    bool shouldIncrease = report[0] < report[1]; // Determine the trend
 
     for (size_t i = 0; i < report.size() - 1; ++i) {
         int difference = report[i + 1] - report[i];
 
-        // Check if the trend or difference is violated
-        if ((shouldIncrease && (difference < 1 || difference > 3)) ||  // Increasing but not within range
-            (!shouldIncrease && (difference > -1 || difference < -3))) { // Decreasing but not within range
+        // Check if the trend is violated or the difference is out of bounds
+        if ((shouldIncrease && difference < 1) ||
+            (!shouldIncrease && difference > -1) ||
+            (std::abs(difference) > 3)) {
             return true; // Unsafe report
-        }
-
-        // Ensure the direction remains consistent
-        if ((shouldIncrease && difference <= 0) || (!shouldIncrease && difference >= 0)) {
-            return true; // Trend violation
         }
     }
 
     return false; // Safe report
-}
-
-void runTestCases() 
-{
-    struct TestCase {
-        std::vector<int> report;
-        bool expectedUnsafe;
-        std::string description;
-    };
 }
 
 int main()
