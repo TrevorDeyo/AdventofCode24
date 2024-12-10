@@ -3,34 +3,55 @@
 #include <vector>
 #include <sstream>
 
-bool isReportSafe(const std::vector<int>& report) 
-{
+// Function to check if a sequence is safe or can be made safe by removing one level
+bool isReportSafe(const std::vector<int>& report) {
     if (report.size() < 2) {
         return false; // Not enough data to determine a trend
     }
 
-    bool shouldIncrease = report[0] < report[1]; // Determine the initial trend
+    // Lambda function to check if a sequence follows the rules
+    auto isSequenceSafe = [](const std::vector<int>& seq) {
+        if (seq.size() < 2) return false; // Still unsafe if less than 2 levels
 
-    for (size_t i = 0; i < report.size() - 1; ++i) {
-        int difference = report[i + 1] - report[i];
+        bool shouldIncrease = seq[0] < seq[1]; // Determine the initial trend
 
-        // Check if the trend or difference is violated
-        if ((shouldIncrease && (difference < 1 || difference > 3)) ||  // Increasing but not within range
-            (!shouldIncrease && (difference > -1 || difference < -3))) { // Decreasing but not within range
-            return false; // Unsafe report
+        for (size_t i = 0; i < seq.size() - 1; ++i) {
+            int difference = seq[i + 1] - seq[i];
+
+            // Check if the trend or difference is violated
+            if ((shouldIncrease && (difference < 1 || difference > 3)) ||  // Increasing but not within range
+                (!shouldIncrease && (difference > -1 || difference < -3))) { // Decreasing but not within range
+                return false; // Unsafe sequence
+            }
+
+            // Ensure the direction remains consistent
+            if ((shouldIncrease && difference <= 0) || (!shouldIncrease && difference >= 0)) {
+                return false; // Trend violation
+            }
         }
+        return true; // Safe sequence
+        };
 
-        // Ensure the direction remains consistent
-        if ((shouldIncrease && difference <= 0) || (!shouldIncrease && difference >= 0)) {
-            return false; // Trend violation
+    // Check if the sequence is safe without modifications
+    if (isSequenceSafe(report)) {
+        return true;
+    }
+
+    // Try removing one level at a time to see if it becomes safe
+    for (size_t i = 0; i < report.size(); ++i) {
+        std::vector<int> modifiedReport = report;
+        modifiedReport.erase(modifiedReport.begin() + i); // Remove one level
+
+        if (isSequenceSafe(modifiedReport)) {
+            return true; // Safe by removing one level
         }
     }
 
-    return true; // Safe report
+    return false; // Unsafe if no single-level removal makes it safe
 }
 
-void runTestCases()
-{
+// Function to run test cases
+void runTestCases() {
     struct TestCase {
         std::vector<int> report;
         bool expectedUnsafe;
@@ -39,14 +60,14 @@ void runTestCases()
 
     // Define test cases
     std::vector<TestCase> testCases = {
-        {{1, 2, 3, 5}, false, "Safe increasing sequence"},
-        {{1, 2, 6}, true, "Unsafe increasing (jump > 3)"},
-        {{5, 3, 2, 1}, false, "Safe decreasing sequence"},
-        {{5, 3, 7}, true, "Unsafe decreasing (trend violation)"},
-        {{1, 3, 2}, true, "Unsafe mixed trend (trend reversal)"},
-        {{3, 3}, true, "Unsafe equal values"},
         {{1}, true, "Unsafe single element (not enough data)"},
-        {{}, true, "Unsafe empty sequence"}
+        {{}, true, "Unsafe empty sequence"},
+        {{7, 6, 4, 2, 1}, false, "Safe without removing any level"},
+        {{1, 2, 7, 8, 9}, true, "Unsafe regardless of which level is removed, jump > 3"},
+        {{9, 7, 6, 2, 1}, true, "Unsafe regardless of which level is removed"},
+        {{1, 3, 2, 4, 5}, false, "Safe by removing the second level, 3"},
+        {{8, 6, 4, 4, 1}, false, "Safe by removing the third level, 4"},
+        {{1, 3, 6, 7, 9}, false, "Safe without removing any level"}
     };
 
     std::cout << "Running test cases...\n";
@@ -55,12 +76,13 @@ void runTestCases()
     for (size_t i = 0; i < testCases.size(); ++i) {
         const auto& testCase = testCases[i];
         bool result = isReportSafe(testCase.report);
+
         std::cout << "Test " << i + 1 << ": " << testCase.description << "\n";
-        std::cout << " Report: ";
+        std::cout << "  Report: ";
         for (int num : testCase.report) {
             std::cout << num << " ";
         }
-        std::cout << "\n Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
+        std::cout << "\n  Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
             << ", Got: " << (result ? "Unsafe" : "Safe") << "\n";
 
         if (result == testCase.expectedUnsafe) {
@@ -73,42 +95,43 @@ void runTestCases()
     }
 }
 
-int main()
-{
-    // Test Cases
+int main() {
+    // Run predefined test cases
     runTestCases();
 
-    std::ifstream file("input.txt"); // Open File
-    if (!file) { // Check if file opened successfully
+    // Read input file and process reports
+    std::ifstream file("input.txt");
+    if (!file) {
         std::cerr << "Error opening file!" << std::endl;
         return 1;
     }
 
-    std::vector<std::vector<int>> allLines; // vector of vectors to store all lines
+    std::vector<std::vector<int>> allReports;
     std::string line;
 
     // Read and parse the input file
-    while (std::getline(file, line)) { // Read file line by line
-        std::istringstream ss(line); // Use stringstream to parse the line
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
         std::vector<int> report;
         int num;
 
-        while (ss >> num) { // Extract integers from the string
+        while (ss >> num) {
             report.push_back(num); // Store each integer in the vector
         }
-
-        allLines.push_back(report); // Store report Vector into the allLines vector
+        allReports.push_back(report); // Store the report in the collection
     }
-    file.close(); // close the file
 
-    int safeCount = 0; // store safe count
-    for (const auto& report : allLines) {
+    file.close(); // Close the input file
+
+    // Count unsafe reports
+    int unsafeCount = 0;
+    for (const auto& report : allReports) {
         if (isReportSafe(report)) {
-            ++safeCount;
+            ++unsafeCount;
         }
     }
 
-    std::cout << "There are " << safeCount << " unsafe reports.\n";
+    std::cout << "There are " << unsafeCount << " unsafe reports.\n";
 
     return 0;
 }
