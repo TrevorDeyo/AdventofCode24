@@ -85,7 +85,7 @@ void runTestCases() {
         std::cout << "\n  Expected: " << (testCase.expectedUnsafe ? "Unsafe" : "Safe")
             << ", Got: " << (result ? "Unsafe" : "Safe") << "\n";
 
-        if (result == testCase.expectedUnsafe) {
+        if (result == !testCase.expectedUnsafe) {
             std::cout << "  Result: PASS\n";
         }
         else {
