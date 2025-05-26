@@ -22,4 +22,7 @@ for match in matches:
     # add the product to the running total
     running_total += num1 * num2
 
+# more compact version
+#running_total = sum(int(num1_str) * int(num2_str) for num1_str, num2_str in matches)
+
 print(running_total)
