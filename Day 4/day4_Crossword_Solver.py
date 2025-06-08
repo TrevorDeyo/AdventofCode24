@@ -24,7 +24,7 @@ def get_cell(grid, row, col, num_rows, num_cols):
         return grid[row][col]
     return None
 
-def check_word_in_direction(grid, start_row, start_col, delta_row, delta_col, num_rows, num_cols):
+def check_word_in_direction(grid, start_row, start_col, delta_row, delta_col):
     """
     Checks if a word exists starting at (start_row, start_col) and extending in the direction (delta_row, delta_col)
 
@@ -76,6 +76,6 @@ directions = [
 for row in range(num_rows):
     for col in range(num_cols):
         for delta_row, delta_col in directions:
-            if check_word_in_direction(grid, row, col, delta_row, delta_col, num_rows, num_cols):
+            if check_word_in_direction(grid, row, col, delta_row, delta_col):
                 matches_found += 1
                 print(f"match found! | total found: {matches_found}")
