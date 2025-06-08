@@ -1,6 +1,6 @@
 # **Crossword Pattern Finder**
 
-This Python script is designed to find a specific word pattern ("XMAS") within a large grid of characters, considering all horizontal, vertical, and diagonal orientations. It's a foundational tool for solving word search puzzles or analyzing character matrices.
+This Python script is designed to find a specific word pattern ("XMAS") within a large grid of characters, considering all horizontal, vertical, and diagonal orientations. It's a foundational tool for solving word search puzzles or analyzing character matrices. Advent of Code 2024 Day 4 Challenge
 
 ## **Features**
 
