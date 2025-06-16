@@ -56,10 +56,6 @@ My primary goal for Advent of Code 2024 is to:
 
 * **Learn New Techniques:** Experiment with different data structures and algorithms as puzzles demand.
 
-## Connect with Me
-
-If you have any questions about my solutions, find a bug, or have a more optimized approach, feel free to open an issue or pull request!
-
 ## About Advent of Code
 
 Advent of Code is created and maintained by **Eric Wastl**. It's a fantastic way to keep your programming skills sharp and learn new things in a fun, gamified environment.
